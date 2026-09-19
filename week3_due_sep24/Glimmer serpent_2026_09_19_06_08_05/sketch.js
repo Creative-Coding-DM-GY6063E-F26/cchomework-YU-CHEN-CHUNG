@@ -16,10 +16,7 @@ function setup() {
 function draw() {
   background(200);
 
-  drawQuietTexture();
   drawItalianFlag(164, 150, 132, 325, 85);
- 
-  drawSmallSymbols();
   drawCanadianFlag(44, 354, 164, 86);
 
   const s = 1.4;
@@ -33,65 +30,6 @@ function draw() {
       s
     );
   }
-
-  // Cord passing in front of the flags.
-  stroke(35, 45, 39);
-  strokeWeight(2);
-  line(0, 49, width, -11);
-}
-
-function drawThinStructure() {
-  stroke(29, 45, 39);
-  strokeWeight(2);
-  noFill();
-
-  line(0, 202, 211, 202);
-  line(72, 189, 211, 189);
-  line(67, 249, 211, 249);
-  line(30, 470, 342, 470);
-
-  line(29, 83, 35, 470);
-  line(76, 72, 77, 470);
-  line(29, 101, 77, 72);
-  line(30, 250, 77, 189);
-  line(31, 341, 76, 250);
-  line(34, 420, 76, 341);
-
-  line(132, 76, 132, 470);
-  line(143, 91, 143, 470);
-  line(132, 119, 206, 79);
-  line(143, 256, 205, 223);
-  line(143, 310, 203, 309);
-  line(143, 391, 203, 371);
-
-  strokeWeight(3);
-  line(143, 254, 188, 254);
-  line(188, 254, 183, 284);
-
-  strokeWeight(1.5);
-  line(249, 72, 370, 165);
-  line(251, 102, 370, 79);
-  line(249, 132, 370, 207);
-  line(264, 90, 307, 142);
-  line(307, 142, 370, 119);
-
-  beginShape();
-  vertex(113, 88);
-  vertex(141, 67);
-  vertex(165, 92);
-  vertex(185, 72);
-  endShape();
-}
-
-function drawSmallSymbols() {
-  noStroke();
-  fill(196, 38, 41);
-  triangle(4, 173, 15, 173, 4, 225);
-  triangle(17, 173, 27, 173, 17, 215);
-
-  fill(28, 55, 46);
-  triangle(171, 70, 198, 91, 171, 98);
-
 }
 
 function drawItalianFlag(x, y, w, h, rise) {
@@ -153,19 +91,6 @@ function drawMapleLeaf(x, y, s) {
   vertex(-6, -12);
   endShape(CLOSE);
   pop();
-}
-
-function drawQuietTexture() {
-  // Only a little print texture; the busy scribbles are intentionally omitted.
-  randomSeed(19);
-  stroke(82, 88, 75, 28);
-  strokeWeight(1);
-  for (let i = 0; i < 55; i++) {
-    const x = random(width);
-    const y = random(60, 478);
-    const len = random(7, 34);
-    line(x, y, x + len, y + random(-5, 5));
-  }
 }
 
 function cooltri(x, y, r, g, b, s = 1) {
