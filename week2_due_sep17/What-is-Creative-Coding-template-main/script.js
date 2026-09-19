@@ -35,7 +35,7 @@ function draw() {
   background(255, 20, 250);
 
   if (isTurning) {
-    pageTurn += 0.12;
+    pageTurn += 0.12; // increment the pageTurn variable to animate the page turn
 
     if (pageTurn >= HALF_PI && !quoteChanged) {
       pickQuote();
