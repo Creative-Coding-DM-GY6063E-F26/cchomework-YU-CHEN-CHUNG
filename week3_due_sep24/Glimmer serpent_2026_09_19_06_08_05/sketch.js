@@ -41,7 +41,6 @@ function drawRearBlueTriangle() {
   noStroke();
   scale(width / 130, height / 175);
   fill(31, 91, 149);
-  // Horizontal triangle behind the Italian flag and the top pennants.
   triangle(88, 31, 136, -3, 136, 26);
   pop();
 }
@@ -49,15 +48,12 @@ function drawRearBlueTriangle() {
 function drawLargeColorShapes() {
   push();
   noStroke();
-  // Coordinates follow the 130 × 175 reference image.
   scale(width / 130, height / 175);
 
-  // Broad blue band crossing in front of the Italian flag.
   fill(27, 104, 147);
   quad(0, 76, 130, 80, 130, 85, 0, 82);
 
-  // Equal-sized flags using the original triangle helper.
-  // The first flag extends past the left edge of the canvas.
+
   const sideFlagScale = 0.5;
   const sideFlagColors = [[190, 43, 43], [190, 43, 43], [33, 65, 111]];
   for (let i = 0; i < 3; i++) {
@@ -70,15 +66,14 @@ function drawLargeColorShapes() {
   fill(238, 179, 41);
   quad(0, 64, 18, 63, 18, 73, 0, 74);
 
-  // Blue parallelogram slanting down to the right, partly off canvas.
+  
   fill(24, 111, 151);
   quad(104, 39, 117, 40, 139, 59, 126, 58);
 
-  // Separate black triangle below the parallelogram.
+
   fill(24, 33, 28);
   triangle(104, 56, 121, 61, 114, 69);
 
-  // Solid dark pennant beneath the top row.
   fill(30, 49, 39);
   triangle(74, 32, 89, 40, 83, 44);
   pop();
@@ -89,8 +84,7 @@ function drawLowerLeftFlag() {
   noStroke();
   scale(width / 130, height / 175);
 
-  // One steep parallelogram, split into white and red horizontal halves.
-  // Its lower portion extends beyond the canvas, as in the reference.
+
   const x = 0;
   const y = 106;
   const w = 28;
@@ -111,7 +105,7 @@ function drawBottomShapes() {
   noStroke();
   scale(width / 130, height / 175);
 
-  // Two rounded brown forms, with their bases following the rising edge.
+  
   fill(108, 96, 74);
   push();
   translate(83.5, 164);
@@ -137,7 +131,6 @@ function drawItalianFlag(x, y, w, h, rise) {
 
   const colors = [[32, 83, 57], [226, 231, 220], [201, 43, 50]];
 
-  // Vertical sides; the top and bottom edges rise toward the right.
   for (let i = 0; i < 3; i++) {
     const leftX = x + w * i / 3;
     const rightX = x + w * (i + 1) / 3;
