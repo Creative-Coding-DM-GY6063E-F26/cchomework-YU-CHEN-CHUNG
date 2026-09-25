@@ -5,7 +5,6 @@ let exportSvg = false;
 
 function setup() {
   createCanvas(816, 1056);
-  pixelDensity(2);
   noLoop();
 }
 
@@ -30,13 +29,13 @@ function drawTower(x, y, w, depth, h, rise, antenna) {
   const roof = [[x-depth,y-rise], [x+w-depth,y-rise-8], [x+w,y-8], [x,y]];
   drawFace(side, [174,177,173], [83,91,91], 59);
   drawFace(front, [224,224,212], [61,72,77], 59);
-  fill(235,232,219);
+  noFill();
   stroke(92,99,98);
   strokeWeight(0.8);
   polygon(roof);
   const rx = x + w * 0.4 - depth * 0.45;
   const ry = y - rise * 0.5 - 5;
-  fill(170,176,173);
+  noFill();
   rect(rx-14, ry-8, 30, 8);
   if (antenna) {
     stroke(81,91,94);
@@ -51,10 +50,10 @@ function drawTower(x, y, w, depth, h, rise, antenna) {
 
 function drawFace(corners, faceColor, lineColor, columns) {
   noStroke();
-  fill(...faceColor);
+  noFill();
   polygon(corners);
-  // Floor lines are quieter than the continuous vertical mullions.
-  stroke(...lineColor,48);
+  // Floor lines use a thinner stroke than the vertical mullions.
+  stroke(...lineColor);
   strokeWeight(0.35);
   for (let floor = 1; floor < 110; floor++) {
     faceLine(corners,0,floor/110,1,floor/110);
@@ -77,10 +76,10 @@ function drawFace(corners, faceColor, lineColor, columns) {
   // Simplified mechanical-floor bands near roof, middle, and lobby.
   for (const v of [0.018,0.31,0.62,0.925]) {
     noStroke();
-    fill(...faceColor);
+    noFill();
     polygon([facePoint(corners,0,v),facePoint(corners,1,v),
       facePoint(corners,1,v+0.015),facePoint(corners,0,v+0.015)]);
-    stroke(...lineColor,180);
+    stroke(...lineColor);
     strokeWeight(0.5);
     for (let k = 0; k <= 4; k++) {
       faceLine(corners,0,v+k*0.00375,1,v+k*0.00375);
