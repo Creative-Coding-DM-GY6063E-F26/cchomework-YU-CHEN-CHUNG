@@ -1,121 +1,115 @@
-// TWIN TOWERS — architectural facade study
-// S: SVG. P: PNG.
-// Only architectural lines: any moire comes from display sampling or resizing.
-let exportSvg = false;
+// This is the sketch.js file.
+// Press 's' to export the SVG.
+// Note that p5.js is used in 'global mode'.
 
-function setup() {
+p5.disableFriendlyErrors = true; // keep warnings quiet
+let bDoExportSvg = false;
+
+const wtcHeight = 680;
+const wtcRoofY = 920 - wtcHeight;
+const wtcSpireY = 920 - wtcHeight * 1776 / 1368;
+const wtcBaseWidth = 210;
+const wtcTopWidth = 112;
+const oneWTC = [
+  [408 - wtcTopWidth / 2, wtcRoofY],
+  [408 + wtcTopWidth / 2, wtcRoofY],
+  [408 + wtcBaseWidth / 2, 920],
+  [408 - wtcBaseWidth / 2, 920]
+];
+
+function setup(){
   createCanvas(816, 1056);
   noLoop();
 }
 
-function draw() {
-  background(245, 243, 235);
-  if (exportSvg) beginRecordSvg("twin-towers.svg");
-  // Parallel projection: two walls and a roof form each rectangular prism.
-  drawTower(463, 176, 180, 88, 704, 32, false);
-  drawTower(235, 218, 173, 85, 706, 35, true);
-  //noStroke();
- 
-  if (exportSvg) {
+function keyPressed(){
+  if (key == 's'){
+    bDoExportSvg = true;
+    redraw();
+  }
+}
+
+function draw(){
+  background(255);
+  if (bDoExportSvg){
+    beginRecordSvg("myOutput.svg");
+  }
+
+  // Draw stuff here:
+  push();
+  const drawingHeight = 920 - wtcSpireY;
+  translate((width - 816) / 2, (height - drawingHeight) / 2 - wtcSpireY);
+  noFill();
+  stroke(0);
+
+  drawTwin(190, 300, 180, 620, true); 
+  drawTwin(446, 300, 180, 620, false); 
+  drawOneWTC();
+  pop();
+
+  if (bDoExportSvg){
     endRecordSvg();
-    exportSvg = false;
+    bDoExportSvg = false;
   }
 }
 
-function drawTower(x, y, w, depth, h, rise, antenna) {
-  // Face corners: top-left, top-right, bottom-right, bottom-left.
-  const front = [[x,y], [x+w,y-8], [x+w,y+h-8], [x,y+h]];
-  const side = [[x-depth,y-rise], [x,y], [x,y+h], [x-depth,y+h-rise]];
-  const roof = [[x-depth,y-rise], [x+w-depth,y-rise-8], [x+w,y-8], [x,y]];
-  drawFace(side, [174,177,173], [83,91,91], 59);
-  drawFace(front, [224,224,212], [61,72,77], 59);
-  noFill();
-  stroke(92,99,98);
-  strokeWeight(0.8);
-  polygon(roof);
-  const rx = x + w * 0.4 - depth * 0.45;
-  const ry = y - rise * 0.5 - 5;
-  noFill();
-  rect(rx-14, ry-8, 30, 8);
-  if (antenna) {
-    stroke(81,91,94);
-    strokeWeight(2);
-    line(rx,ry-8,rx,ry-91);
-    strokeWeight(0.65);
-    line(rx-9,ry-8,rx,ry-48);
-    line(rx+9,ry-8,rx,ry-48);
-    line(rx-4,ry-62,rx+4,ry-62);
+function drawOneWTC() {
+  const [tl, tr, br, bl] = oneWTC;
+  //vertical lines, 32 columns
+  for (let i = 1; i < 32; i++) {
+    const t = i / 32;
+    line(lerp(tl[0], tr[0], t), tl[1], lerp(bl[0], br[0], t), bl[1]);
   }
+ 
+  //two diagnal lines
+  const center = (bl[0] + br[0]) / 2;
+  line(tl[0], tl[1], center, bl[1]);
+  line(tr[0], tr[1], center, br[1]);
+  // edge lines
+  for (let i = 0; i < 4; i++) {
+    const a = oneWTC[i];
+    const b = oneWTC[(i + 1) % 4];
+    line(a[0], a[1], b[0], b[1]);
+  }
+  line(center, tl[1], center, wtcSpireY);
+  line(center - 5, wtcSpireY + 35, center + 5, wtcSpireY + 35);
 }
 
-function drawFace(corners, faceColor, lineColor, columns) {
-  noStroke();
-  noFill();
-  polygon(corners);
-  // Floor lines use a thinner stroke than the vertical mullions.
-  stroke(...lineColor);
-  strokeWeight(0.35);
-  for (let floor = 1; floor < 110; floor++) {
-    faceLine(corners,0,floor/110,1,floor/110);
+function drawTwin(x, y, w, h, antenna) {
+  const columns = 36;
+
+  function gridLine(u1, v1, u2, v2) {
+    line(x + w * u1, y + h * v1, x + w * u2, y + h * v2);
   }
-  stroke(...lineColor);
-  strokeWeight(0.85);
   for (let col = 0; col < columns; col++) {
     const u = (col + 0.5) / columns;
-    faceLine(corners,u,0.018,u,0.94);
+    gridLine(u, 0.018, u, 0.94);
   }
-  // Groups of slender columns branch into wider-spaced lobby piers.
+  // bottom lines
   for (let col = 0; col < columns; col += 3) {
     const count = min(3, columns-col);
     const center = (col + count/2) / columns;
     for (let branch = 0; branch < count; branch++) {
-      faceLine(corners,(col+branch+0.5)/columns,0.94,center,0.965);
+      gridLine((col + branch + 0.5) / columns, 0.94, center, 0.965);
     }
-    faceLine(corners,center,0.965,center,1);
+    gridLine(center, 0.965, center, 1);
   }
-  // Simplified mechanical-floor bands near roof, middle, and lobby.
+  // rings。
   for (const v of [0.018,0.31,0.62,0.925]) {
-    noStroke();
-    noFill();
-    polygon([facePoint(corners,0,v),facePoint(corners,1,v),
-      facePoint(corners,1,v+0.015),facePoint(corners,0,v+0.015)]);
-    stroke(...lineColor);
-    strokeWeight(0.5);
     for (let k = 0; k <= 4; k++) {
-      faceLine(corners,0,v+k*0.00375,1,v+k*0.00375);
+      gridLine(0, v + k * 0.00375, 1, v + k * 0.00375);
     }
   }
-  noFill();
-  stroke(...lineColor);
-  strokeWeight(0.85);
-  polygon(corners);
-}
+  // edge lines
+  gridLine(0, 0, 1, 0);
+  gridLine(1, 0, 1, 1);
+  gridLine(1, 1, 0, 1);
+  gridLine(0, 1, 0, 0);
 
-function facePoint(corners,u,v) {
-  const topX = lerp(corners[0][0],corners[1][0],u);
-  const topY = lerp(corners[0][1],corners[1][1],u);
-  const bottomX = lerp(corners[3][0],corners[2][0],u);
-  const bottomY = lerp(corners[3][1],corners[2][1],u);
-  return [lerp(topX,bottomX,v),lerp(topY,bottomY,v)];
-}
-
-function faceLine(corners,u1,v1,u2,v2) {
-  const a = facePoint(corners,u1,v1);
-  const b = facePoint(corners,u2,v2);
-  line(a[0],a[1],b[0],b[1]);
-}
-
-function polygon(points) {
-  beginShape();
-  for (const p of points) vertex(p[0],p[1]);
-  endShape(CLOSE);
-}
-
-function keyPressed() {
-  if (key === "s" || key === "S") {
-    if (typeof beginRecordSvg === "function") exportSvg = true;
-    else alert("SVG exporter has not loaded. Check your connection, or press P for PNG.");
+  if (antenna) {
+    const cx = x + w / 2;
+    const tipY = y - h * 0.26;
+    line(cx, y, cx, tipY);
+    line(cx - 5, tipY + 35, cx + 5, tipY + 35);
   }
-  if (key === "p" || key === "P") saveCanvas("twin-towers","png");
-  redraw();
 }
