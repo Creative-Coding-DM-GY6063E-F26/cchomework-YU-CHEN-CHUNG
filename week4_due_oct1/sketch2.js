@@ -25,12 +25,12 @@ function draw(){
   push();
   translate(width / 2, height / 2);
 
-  for (let x = -240; x <= 240; x += 7.5){
+  for (let x = -240; x <= 240; x += 15){
     line(x, -300, x, 300);
   }
 
   rotate(4 * Math.PI / 180);
-  for (let x = -237.5; x <= 240; x += 7.5){
+  for (let x = -237.5; x <= 240; x += 15){
     line(x, -300, x, 300);
   }
   pop();
