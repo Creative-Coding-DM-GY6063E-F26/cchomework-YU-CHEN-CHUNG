@@ -19,8 +19,8 @@ function draw() {
   let amplitude = width * 0.005;
   let wavePhase = timeInSeconds * TWO_PI / 120;
 
-  background('#080F1C');
-  fill('#287BC1');
+  background(8, 15, 28);
+  fill(40, 123, 193);
 
   // Day on the left, night on the right: the boundary moves horizontally.
   beginShape();
@@ -40,17 +40,17 @@ function draw() {
   let moonSize = min(symbolSize, (width - boundary) * 0.35);
   let skyY = height * 0.3;
 
-  fill('#FFE5A0');
+  fill(255, 229, 160);
   circle(boundary / 2, skyY, sunSize);
 
   let moonX = boundary + (width - boundary) / 2;
-  fill('#E3EAF5');
+  fill(227, 234, 245);
   circle(moonX, skyY, moonSize);
-  fill('#080F1C');
+  fill(8, 15, 28);
   circle(moonX + moonSize * 0.25, skyY - moonSize * 0.12,
     moonSize * 0.9);
 
-  // A small village anchors the scene while the sky changes.
+  // village
   let groundY = height * 0.84;
   let houseWidth = min(width * 0.075, height * 0.13);
   for (let i = 0; i < 5; i++) {
@@ -58,12 +58,12 @@ function draw() {
     let houseHeight = houseWidth * (0.85 + (i % 3) * 0.18);
     drawHouse(x, groundY, houseWidth, houseHeight, boundary);
   }
-  fill('#101E2B');
+  fill(16, 30, 43);
   rect(0, groundY, width, height - groundY);
 
-  // Show the actual local time in 24-hour format, centered on the canvas.
+  // Show the actual local time in 24-hour format.
   let clockText = nf(h, 2) + ':' + nf(m, 2) + ':' + nf(floor(s), 2);
-  fill('#F3F6FA');
+  fill(243, 246, 250);
   textFont('monospace');
   textSize(min(width * 0.075, height * 0.09, 72));
   textAlign(CENTER, CENTER);
@@ -72,7 +72,7 @@ function draw() {
 
 function drawHouse(x, groundY, w, h, boundary) {
   let top = groundY - h;
-  fill('#101E2B');
+  fill(16, 30, 43);
   rect(x - w / 2, top, w, h);
   triangle(x - w * 0.62, top, x, top - w * 0.45,
     x + w * 0.62, top);
@@ -80,7 +80,11 @@ function drawHouse(x, groundY, w, h, boundary) {
   // Windows light up on the night side as the boundary passes them.
   for (let side of [-1, 1]) {
     let windowX = x + side * w * 0.23;
-    fill(windowX > boundary ? '#F4CE83' : '#57788E');
+    if (windowX > boundary) {
+      fill(244, 206, 131);
+    } else {
+      fill(87, 120, 142);
+    }
     rect(windowX - w * 0.075, top + h * 0.3, w * 0.15, h * 0.2);
   }
 }
