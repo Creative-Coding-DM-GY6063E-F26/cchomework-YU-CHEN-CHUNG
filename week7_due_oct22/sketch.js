@@ -11,6 +11,74 @@ let pMapper; // variable to store pMapper object (projection mapping library)
 let quadLeft, quadRight, quadTop; // my quad surfaces
 let leftImage;
 let imageLoadFailed = false;
+const ant = {x: 200, y: 200, angle: 0, step: 0};
+const antKeys = new Set();
+
+function updateAnt() {
+  const dx = Number(antKeys.has("arrowright")) - Number(antKeys.has("arrowleft"));
+  const dy = Number(antKeys.has("arrowdown")) - Number(antKeys.has("arrowup"));
+  const length = Math.hypot(dx, dy);
+  if (!length) return;
+  const distance = 150 * Math.min(deltaTime / 1000, 0.05);
+  ant.x = Math.max(32, Math.min(768, ant.x + dx / length * distance));
+  ant.y = Math.max(70, Math.min(368, ant.y + dy / length * distance));
+  ant.angle = Math.atan2(dy, dx);
+  ant.step += distance * 0.2;
+}
+
+function drawAnt(pg, offset) {
+  pg.push();
+  pg.ellipseMode(CENTER);
+  pg.rectMode(CORNER);
+  pg.translate(ant.x - offset, ant.y);
+  // Rotate coordinates explicitly so global angleMode cannot affect the ant.
+  const c = Math.cos(ant.angle), s = Math.sin(ant.angle);
+  pg.applyMatrix(c, s, -s, c, 0, 0);
+  pg.stroke(255, 225, 164);
+  pg.strokeWeight(5);
+  pg.strokeCap(ROUND);
+  for (let side of [-1, 1]) {
+    for (let i = 0; i < 3; i++) {
+      const x = -9 + i * 9;
+      const swing = Math.sin(ant.step + i * Math.PI + (side > 0 ? Math.PI : 0)) * 5;
+      pg.line(x, side * 5, x - 7 + swing, side * 17);
+      pg.line(x - 7 + swing, side * 17, x + 2 + swing, side * 25);
+    }
+  }
+  pg.stroke(39, 22, 18);
+  pg.strokeWeight(3);
+  pg.fill(118, 46, 31);
+  pg.ellipse(-18, 0, 27, 21);
+  pg.fill(163, 64, 37);
+  pg.ellipse(1, 0, 19, 15);
+  pg.fill(204, 91, 44);
+  pg.ellipse(19, 0, 22, 21);
+  pg.line(25, -6, 35, -15);
+  pg.line(35, -15, 41, -12);
+  pg.line(25, 6, 35, 15);
+  pg.line(35, 15, 41, 12);
+  pg.noStroke();
+  pg.fill(255);
+  pg.ellipse(23, -5, 6, 6);
+  pg.ellipse(23, 5, 6, 6);
+  pg.fill(20);
+  pg.ellipse(25, -5, 3, 3);
+  pg.ellipse(25, 5, 3, 3);
+  pg.pop();
+
+  pg.push();
+  pg.rectMode(CORNER);
+  pg.noStroke();
+  pg.fill(15, 22, 32, 210);
+  pg.rect(8, 8, 384, 35, 6);
+  pg.fill(255);
+  pg.textSize(14);
+  pg.textAlign(CENTER, CENTER);
+  pg.text("ARROW KEYS: MOVE ANT  |  R: RESET", 200, 25);
+  pg.pop();
+}
+
+window.addEventListener("blur", () => antKeys.clear());
 
 function setup() {
   createCanvas(windowWidth, windowHeight, WEBGL);
@@ -35,6 +103,8 @@ function setup() {
 
 function draw() {
   background(0);
+
+  updateAnt();
 
   // display each of the projection surfaces in draw
   quadLeft.displaySketch(mySketch);
@@ -73,6 +143,7 @@ function mySketch(pg){ // "pg" refers to each canvas "instance"
     pg.text(imageLoadFailed ? "Image failed to load" : "Loading image...", 200, 200);
   }
   pg.pop();
+  drawAnt(pg, 0);
 }
 
 function myOtherSketch(pg) {
@@ -131,10 +202,22 @@ function myOtherSketch(pg) {
   pg.fill(227, 75, 75);
   pg.ellipse(0, 0, 7, 7);
   pg.pop();
+  drawAnt(pg, 400);
 }
 
 function keyPressed() { // keypressed toggles different modes
-  switch (key) {
+  const pressed = key.toLowerCase();
+  if (pressed.startsWith("arrow")) {
+    antKeys.add(pressed);
+    return false;
+  }
+  if (pressed === "r") {
+    ant.x = 200;
+    ant.y = 200;
+    ant.angle = 0;
+    ant.step = 0;
+  }
+  switch (pressed) {
     case "c":
       pMapper.toggleCalibration();
       break;
@@ -150,6 +233,11 @@ function keyPressed() { // keypressed toggles different modes
       pMapper.save("map.json");
       break;
   }
+}
+
+function keyReleased() {
+  antKeys.delete(key.toLowerCase());
+  if (key.toLowerCase().startsWith("arrow")) return false;
 }
 
 function windowResized() {
