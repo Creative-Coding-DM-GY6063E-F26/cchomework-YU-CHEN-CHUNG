@@ -1,13 +1,17 @@
 html, body {
   margin: 0;
   padding: 0;
+<<<<<<< HEAD
   background: #f3f5f7;
   color: #203044;
   font-family: system-ui, sans-serif;
+=======
+>>>>>>> 7e7be2cd02fd180bdc434853c118882ab06d2a9d
 }
 
 canvas {
   display: block;
+<<<<<<< HEAD
   max-width: 100%;
   height: auto !important;
   border-radius: 12px;
@@ -39,3 +43,6 @@ h2 { margin-top: 0; font-size: 20px; }
 table { width: 100%; border-collapse: collapse; font-variant-numeric: tabular-nums; font-size: 14px; }
 th, td { padding: 7px 4px; border-bottom: 1px solid #e8edf2; text-align: right; }
 th:first-child, td:first-child { text-align: left; overflow-wrap: anywhere; }
+=======
+}
+>>>>>>> 7e7be2cd02fd180bdc434853c118882ab06d2a9d
