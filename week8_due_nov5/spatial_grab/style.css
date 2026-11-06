@@ -39,3 +39,13 @@ h2 { margin-top: 0; font-size: 20px; }
 table { width: 100%; border-collapse: collapse; font-variant-numeric: tabular-nums; font-size: 14px; }
 th, td { padding: 7px 4px; border-bottom: 1px solid #e8edf2; text-align: right; }
 th:first-child, td:first-child { text-align: left; overflow-wrap: anywhere; }
+
+/* Controls stay beside the artwork, beneath a fixed-size camera preview. */
+.workspace { grid-template-columns: minmax(0, 1fr) 220px; }
+.sidebar { display: grid; gap: 10px; align-content: start; font-size: 13px; }
+.sidebar p { margin: 0; line-height: 1.5; }
+.sidebar .camera-preview { justify-self: center; }
+.camera-preview .tracking-status { height: 40px; overflow: auto; }
+.sidebar button { width: 100%; }
+h1 { margin-bottom: 8px; }
+@media (max-width: 760px) { .workspace { grid-template-columns: minmax(0, 1fr); } }
